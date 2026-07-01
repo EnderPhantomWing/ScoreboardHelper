@@ -148,8 +148,10 @@ public class ScoreEditingScreen extends Screen {
             }
             if (scoreModifications.isEmpty()) {
                 //#if MC >= 1.21.3
-                //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
+                //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                //#else
                 minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                //#endif
             }
             onClose();
         }
