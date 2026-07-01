@@ -10,8 +10,21 @@ preprocess {
     strictExtraMappings = false
 
     val mc12006     = createNode("1.20.6",  1_20_06,    "official")
+    val mc12101     = createNode("1.21.1",  1_21_01,    "official")
+    val mc12103     = createNode("1.21.3",  1_21_03,    "official")
+    val mc12104     = createNode("1.21.4",  1_21_04,    "official")
+    val mc12105     = createNode("1.21.5",  1_21_05,    "official")
+    val mc12108     = createNode("1.21.8",  1_21_08,    "official")
+    val mc12110     = createNode("1.21.10", 1_21_10,    "official")
+    val mc12111     = createNode("1.21.11", 1_21_11,    "official")
 
-    mc12006     .link(  mc12006,    null)
+    mc12006     .link(  mc12101,    null)
+    mc12101     .link(  mc12103,    null)
+    mc12103     .link(  mc12104,    null)
+    mc12104     .link(  mc12105,    null)
+    mc12105     .link(  mc12108,    null)
+    mc12108     .link(  mc12110,    null)
+    mc12110     .link(  mc12111,    file("mappings/mapping-1.21.10-1.21.11.txt"))
 
     // See https://github.com/Fallen-Breath/fabric-mod-template/blob/1d72d77a1c5ce0bf060c2501270298a12adab679/build.gradle#L55-L63
     for (node in getNodes()) {
@@ -22,6 +35,7 @@ preprocess {
 }
 
 tasks.register("buildAndGather") {
+    description = ""
     subprojects {
         dependsOn(tasks.named("build"))
     }
