@@ -52,24 +52,6 @@ val Project.mixinJavaVersion get() = "JAVA_${javaVersion}"
 val Project.fullProjectVersionName: String get() = "v$fullProjectVersion"
 val Project.fullProjectVersion: String get() = getFullProjectVersion(mcVersion, modVersion)
 
-/**
- * 获取子项目哈希值。
- * @param mcVersion Minecraft 版本字符串（例如 "1.20.1"）
- * @return 由 Git 8位短哈希 + mcVersion 计算的 SHA-256 摘要的前两位
- */
-fun getSubprojectHash(mcVersion: String?): String {
-    val shortCommit = getGitShortCommit() ?: "unknown"
-    val combined = "$shortCommit$mcVersion"   // 通过 $ 直接获取变量值
-    val digest = MessageDigest.getInstance("SHA-256")
-        .digest(combined.toByteArray(Charsets.UTF_8))
-    val hex = digest.joinToString("") { "%02x".format(it) } // Kotlin 标准库扩展
-    return hex.take(2) // Kotlin String 扩展
-}
-
-/**
- * 获取当前 Git 仓库最新提交的 8 位短哈希。
- * 若失败（非 Git 仓库或 git 命令不可用）返回 null。
- */
 private fun getGitShortCommit(): String? {
     return try {
         val process = Runtime.getRuntime().exec(arrayOf("git", "rev-parse", "--short=8", "HEAD"))
@@ -79,6 +61,15 @@ private fun getGitShortCommit(): String? {
     } catch (e: Exception) {
         null
     }
+}
+
+private fun getSubprojectHash(mcVersion: String?): String {
+    val shortCommit = getGitShortCommit() ?: "unknown"
+    val combined = "$shortCommit$mcVersion"   // 通过 $ 直接获取变量值
+    val digest = MessageDigest.getInstance("SHA-256")
+        .digest(combined.toByteArray(Charsets.UTF_8))
+    val hex = digest.joinToString("") { "%02x".format(it) } // Kotlin 标准库扩展
+    return hex.take(2) // Kotlin String 扩展
 }
 
 private fun getCommitCountNumber(workDir: File = File(".")): Int? {
