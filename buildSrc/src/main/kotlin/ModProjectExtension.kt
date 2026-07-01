@@ -65,11 +65,11 @@ private fun getGitShortCommit(): String? {
 
 private fun getSubprojectHash(mcVersion: String?): String {
     val shortCommit = getGitShortCommit() ?: "unknown"
-    val combined = "$shortCommit$mcVersion"   // 通过 $ 直接获取变量值
+    val combined = "$mcVersion"
     val digest = MessageDigest.getInstance("SHA-256")
         .digest(combined.toByteArray(Charsets.UTF_8))
     val hex = digest.joinToString("") { "%02x".format(it) } // Kotlin 标准库扩展
-    return hex.take(2) // Kotlin String 扩展
+    return shortCommit + hex.take(2)
 }
 
 private fun getCommitCountNumber(workDir: File = File(".")): Int? {
