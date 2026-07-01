@@ -63,10 +63,12 @@ public class PropertyListWidget extends ContainerObjectSelectionList<PropertyLis
         return 400;
     }
 
+    //#if MC <= 1.21.1
     @Override
     protected int getScrollbarPosition() {
         return super.getScrollbarPosition() + 32;
     }
+    //#endif
 
     protected static class WidgetEntry extends ContainerObjectSelectionList.Entry<WidgetEntry> {
         private final List<AbstractWidget> widgets;

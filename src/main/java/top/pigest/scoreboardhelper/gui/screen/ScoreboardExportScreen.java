@@ -193,7 +193,11 @@ public class ScoreboardExportScreen extends Screen {
     }
 
     private void sendSuccessMessage(String name, File file) {
+        //#if MC >= 1.21.5
+        //$$ Component text = Component.literal(name).setStyle(Style.EMPTY.withUnderlined(true).withClickEvent(new ClickEvent.OpenFile(file.getAbsolutePath())));
+        //#else
         Component text = Component.literal(name).setStyle(Style.EMPTY.withUnderlined(true).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())));
+        //#endif
         MutableComponent text1 = Component.translatable("hint.scoreboard-helper.export.success", text);
         if (minecraft != null) {
             if (minecraft.player != null) {

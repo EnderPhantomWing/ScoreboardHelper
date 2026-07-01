@@ -134,7 +134,11 @@ public class ScoreEditingScreen extends Screen {
         SingleScore entry = new SingleScore("", 0);
         this.scores.add(entry);
         this.widget.addSingleScore(entry);
+        //#if MC >= 1.21.4
+        //$$ this.widget.setScrollAmount(this.widget.maxScrollAmount());
+        //#else
         this.widget.setScrollAmount(this.widget.getMaxScroll());
+        //#endif
         this.addButton.active = false;
     }
 

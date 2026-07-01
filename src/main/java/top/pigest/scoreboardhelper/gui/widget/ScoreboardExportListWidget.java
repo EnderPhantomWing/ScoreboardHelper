@@ -77,9 +77,15 @@ public class ScoreboardExportListWidget extends ContainerObjectSelectionList<Sco
                 }
                 widget.parent.getRecordEntries().remove(entry);
                 widget.removeEntry(this);
-                if(widget.getScrollAmount() > widget.getMaxScroll()) {
+                //#if MC >= 1.21.4
+                //$$ if (widget.scrollAmount() > widget.maxScrollAmount()) {
+                //$$     widget.setScrollAmount(widget.maxScrollAmount());
+                //$$ }
+                //#else
+                if (widget.getScrollAmount() > widget.getMaxScroll()) {
                     widget.setScrollAmount(widget.getMaxScroll());
                 }
+                //#endif
             }).bounds(0, 0, 60, 20).build();
             this.forwardButton = Button.builder(Component.literal("↑"), button -> {
                 int index = getIndex();

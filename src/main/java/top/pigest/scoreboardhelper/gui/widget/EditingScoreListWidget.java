@@ -76,10 +76,12 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
         return 300;
     }
 
+    //#if MC <= 1.21.1
     @Override
     protected int getScrollbarPosition() {
         return width / 2 + 130;
     }
+    //#endif
 
     public class Entry extends ContainerObjectSelectionList.Entry<Entry> {
         private final ScoreEditingScreen.SingleScore singleScore;
@@ -138,9 +140,15 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
             EditingScoreListWidget widget = EditingScoreListWidget.this;
             widget.removeEntry(this);
             widget.parent.getScores().remove(entry);
+            //#if MC >= 1.21.4
+            //$$ if(widget.scrollAmount() > widget.maxScrollAmount()) {
+            //$$     widget.setScrollAmount(widget.maxScrollAmount());
+            //$$ }
+            //#else
             if(widget.getScrollAmount() > widget.getMaxScroll()) {
                 widget.setScrollAmount(widget.getMaxScroll());
             }
+            //#endif
         }
 
         private void removeIfNew() {
