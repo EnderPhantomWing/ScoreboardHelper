@@ -1,10 +1,10 @@
 package top.pigest.scoreboardhelper.gui.screen;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import top.pigest.scoreboardhelper.config.ScoreboardHelperConfig;
 import top.pigest.scoreboardhelper.config.property.Property;
 import top.pigest.scoreboardhelper.gui.widget.PropertyListWidget;
@@ -18,20 +18,20 @@ public class ScoreboardHelperConfigScreen extends Screen {
     private PropertyListWidget propertyList;
 
     public ScoreboardHelperConfigScreen(Screen parent, ScoreboardHelperConfig config) {
-        super(Text.translatable(Property.getTranslationKey("title", TranslationKeyType.NORMAL)));
+        super(Component.translatable(Property.getTranslationKey("title", TranslationKeyType.NORMAL)));
         this.parent = parent;
         this.config = config;
     }
 
     @Override
     protected void init() {
-        this.propertyList = new PropertyListWidget(client, this);
-        addSelectableChild(propertyList);
-        addDrawableChild(new ButtonWidget.Builder(Text.translatable(Property.getTranslationKey("reset", TranslationKeyType.NORMAL)), button -> {
+        this.propertyList = new PropertyListWidget(minecraft, this);
+        addWidget(propertyList);
+        addRenderableWidget(new Button.Builder(Component.translatable(Property.getTranslationKey("reset", TranslationKeyType.NORMAL)), button -> {
             ScoreboardHelperConfig.INSTANCE.resetDefault();
-            this.clearAndInit();
-        }).size(200, 20).position(width / 2 + 10, height - 26).build());
-        addDrawableChild(new ButtonWidget.Builder(ScreenTexts.DONE, button -> close()).size(200, 20).position(width / 2 - 10 - 200, height - 26).build());
+            this.rebuildWidgets();
+        }).size(200, 20).pos(width / 2 + 10, height - 26).build());
+        addRenderableWidget(new Button.Builder(CommonComponents.GUI_DONE, button -> onClose()).size(200, 20).pos(width / 2 - 10 - 200, height - 26).build());
     }
 
     public ScoreboardHelperConfig getConfig() {
@@ -39,8 +39,8 @@ public class ScoreboardHelperConfigScreen extends Screen {
     }
 
     @Override
-    public void close() {
-        Objects.requireNonNull(client).setScreen(parent);
+    public void onClose() {
+        Objects.requireNonNull(minecraft).setScreen(parent);
     }
 
     @Override
@@ -49,10 +49,10 @@ public class ScoreboardHelperConfigScreen extends Screen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         this.propertyList.render(context, mouseX, mouseY, delta);
         int TITLE_Y = 8;
-        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, TITLE_Y, 0xFFFFFF);
+        context.drawCenteredString(font, title, width / 2, TITLE_Y, 0xFFFFFF);
     }
 }

@@ -2,12 +2,12 @@ package top.pigest.scoreboardhelper.gui.widget;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import org.jetbrains.annotations.Nullable;
 import top.pigest.scoreboardhelper.config.property.Property;
 import top.pigest.scoreboardhelper.gui.screen.ScoreboardHelperConfigScreen;
@@ -15,9 +15,9 @@ import top.pigest.scoreboardhelper.gui.screen.ScoreboardHelperConfigScreen;
 import java.util.List;
 import java.util.Map;
 
-public class PropertyListWidget extends ElementListWidget<PropertyListWidget.WidgetEntry> {
+public class PropertyListWidget extends ContainerObjectSelectionList<PropertyListWidget.WidgetEntry> {
     private final ScoreboardHelperConfigScreen parent;
-    public PropertyListWidget(MinecraftClient minecraftClient, ScoreboardHelperConfigScreen screen) {
+    public PropertyListWidget(Minecraft minecraftClient, ScoreboardHelperConfigScreen screen) {
         super(minecraftClient, screen.width, screen.height - 32 - 32, 32, 25);
         parent = screen;
         this.addAll(parent.getConfig().getProperties());
@@ -39,19 +39,19 @@ public class PropertyListWidget extends ElementListWidget<PropertyListWidget.Wid
     }
 
     @Override
-    protected int getScrollbarX() {
-        return super.getScrollbarX() + 32;
+    protected int getScrollbarPosition() {
+        return super.getScrollbarPosition() + 32;
     }
 
-    protected static class WidgetEntry extends ElementListWidget.Entry<WidgetEntry> {
-        private final List<ClickableWidget> widgets;
+    protected static class WidgetEntry extends ContainerObjectSelectionList.Entry<WidgetEntry> {
+        private final List<AbstractWidget> widgets;
 
-        private WidgetEntry(Map<Property<?>, ClickableWidget> propertiesToWidgets) {
+        private WidgetEntry(Map<Property<?>, AbstractWidget> propertiesToWidgets) {
             this.widgets = ImmutableList.copyOf(propertiesToWidgets.values());
         }
 
         public static WidgetEntry create(int width, Property<?> firstProperty, @Nullable Property<?> secondProperty) {
-            ClickableWidget clickableWidget = firstProperty.createWidget(width / 2 - 205, 0, 200);
+            AbstractWidget clickableWidget = firstProperty.createWidget(width / 2 - 205, 0, 200);
             if (secondProperty == null) {
                 return new WidgetEntry(ImmutableMap.of(firstProperty, clickableWidget));
             }
@@ -59,17 +59,17 @@ public class PropertyListWidget extends ElementListWidget<PropertyListWidget.Wid
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
+        public List<? extends NarratableEntry> narratables() {
             return widgets;
         }
 
         @Override
-        public List<? extends Element> children() {
+        public List<? extends GuiEventListener> children() {
             return widgets;
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             this.widgets.forEach(
                     widget -> {
                         widget.setY(y);

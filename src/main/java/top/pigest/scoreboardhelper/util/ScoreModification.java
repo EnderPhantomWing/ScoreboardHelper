@@ -1,14 +1,14 @@
 package top.pigest.scoreboardhelper.util;
 
-import net.minecraft.scoreboard.ScoreboardObjective;
+import net.minecraft.world.scores.Objective;
 
 public class ScoreModification {
     private final ModificationType type;
-    private final ScoreboardObjective objective;
+    private final Objective objective;
     private final String name;
     private final int score;
 
-    public ScoreModification(ModificationType type, ScoreboardObjective objective, String name, int score) {
+    public ScoreModification(ModificationType type, Objective objective, String name, int score) {
         this.type = type;
         this.name = name;
         this.objective = objective;

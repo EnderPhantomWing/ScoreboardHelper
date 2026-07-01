@@ -7,8 +7,8 @@
   ],
   "client": [
     "ChatScreenMixin",
-    "ClientPlayNetworkHandlerMixin",
-    "InGameHudMixin"
+    "ClientPacketListenerMixin",
+    "GuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

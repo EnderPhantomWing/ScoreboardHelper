@@ -3,9 +3,9 @@ package top.pigest.scoreboardhelper.config.property;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import top.pigest.scoreboardhelper.gui.widget.PropertySliderWidget;
 import top.pigest.scoreboardhelper.util.TranslationKeyType;
 
@@ -33,13 +33,13 @@ public class IntegerProperty extends BaseProperty<Integer> {
     }
 
     @Override
-    public ClickableWidget createWidget(int x, int y, int width) {
-        Text text = Text.translatable(Property.getTranslationKey(this.getKey(), TranslationKeyType.NORMAL));
-        Text tooltip = Text.translatable(Property.getTranslationKey(this.getKey(), TranslationKeyType.TOOLTIP));
+    public AbstractWidget createWidget(int x, int y, int width) {
+        Component text = Component.translatable(Property.getTranslationKey(this.getKey(), TranslationKeyType.NORMAL));
+        Component tooltip = Component.translatable(Property.getTranslationKey(this.getKey(), TranslationKeyType.TOOLTIP));
         int propertyValue = getValue();
         double value = 1.0 * (propertyValue - min) / (max - min);
         PropertySliderWidget<Integer> propertySliderWidget = new PropertySliderWidget<>(x, y, width, 20, text, value, this, PropertySliderWidget.ValueTextGetter.getDefaultTextGetter(), PropertySliderWidget.PropertyValueApplier.getDefaultIntegerPropertyValueApplier(min, max));
-        propertySliderWidget.setTooltip(Tooltip.of(tooltip));
+        propertySliderWidget.setTooltip(Tooltip.create(tooltip));
         return propertySliderWidget;
     }
 }

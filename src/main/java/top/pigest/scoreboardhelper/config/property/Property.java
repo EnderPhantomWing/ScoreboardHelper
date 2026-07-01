@@ -1,7 +1,7 @@
 package top.pigest.scoreboardhelper.config.property;
 
 import com.google.gson.JsonElement;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.components.AbstractWidget;
 import top.pigest.scoreboardhelper.util.TranslationKeyType;
 
 public interface Property<T> {
@@ -23,5 +23,5 @@ public interface Property<T> {
     void setValue(T value);
     JsonElement toJson();
     void fromJson(JsonElement jsonElement);
-    ClickableWidget createWidget(int x, int y, int width);
+    AbstractWidget createWidget(int x, int y, int width);
 }

@@ -1,15 +1,15 @@
 package top.pigest.scoreboardhelper.gui.screen;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.scoreboard.ScoreboardObjective;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.Objective;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import top.pigest.scoreboardhelper.config.ScoreSortingMethod;
 import top.pigest.scoreboardhelper.config.ScoreboardHelperConfig;
@@ -26,13 +26,13 @@ public class ScoreEditingScreen extends Screen {
     private SortMethod sortMethod;
     private boolean reversedSort;
     private EditingScoreListWidget widget;
-    private ButtonWidget submitButton;
-    private ButtonWidget reversedSortButton;
-    public ButtonWidget addButton;
-    public ScoreEditingScreen(Screen parent, @NotNull Scoreboard scoreboard, @NotNull ScoreboardObjective objective) {
-        super(Text.translatable(getTranslationKey("title"), objective.getDisplayName()));
+    private Button submitButton;
+    private Button reversedSortButton;
+    public Button addButton;
+    public ScoreEditingScreen(Screen parent, @NotNull Scoreboard scoreboard, @NotNull Objective objective) {
+        super(Component.translatable(getTranslationKey("title"), objective.getDisplayName()));
         this.parent = parent;
-        this.scores = scoreboard.getScoreboardEntries(objective).stream().map(score -> new SingleScore(score.owner(), score.value())).collect(Collectors.toList());
+        this.scores = scoreboard.listPlayerScores(objective).stream().map(score -> new SingleScore(score.owner(), score.value())).collect(Collectors.toList());
         ScoreSortingMethod sorting = ScoreboardHelperConfig.INSTANCE.sortingMethod.getValue();
         reversedSort = switch (sorting) {
             case BY_SCORE_DESC, BY_NAME_DESC -> true;
@@ -46,11 +46,11 @@ public class ScoreEditingScreen extends Screen {
 
     @Override
     public void tick() {
-        if (client != null && client.player != null) {
-            if (!client.player.hasPermissionLevel(2)) {
+        if (minecraft != null && minecraft.player != null) {
+            if (!minecraft.player.hasPermissions(2)) {
                 if (this.submitButton.active) {
                     this.submitButton.active = false;
-                    this.submitButton.setTooltip(Tooltip.of(Text.translatable("hint.scoreboard-helper.edit_score.permission_denied")));
+                    this.submitButton.setTooltip(Tooltip.create(Component.translatable("hint.scoreboard-helper.edit_score.permission_denied")));
                 }
             } else {
                 if (!this.submitButton.active) {
@@ -63,24 +63,24 @@ public class ScoreEditingScreen extends Screen {
 
     @Override
     protected void init() {
-        CyclingButtonWidget<SortMethod> buttonWidget = CyclingButtonWidget.<SortMethod>builder(value -> Text.translatable("options.scoreboard-helper.edit_score.sort_method." + value.toString()))
-                .values(SortMethod.values())
-                .initially(sortMethod)
-                .build(width / 2 - 10 - 200, height - 60, 170, 20, Text.translatable(getTranslationKey("sort_method")), ((button, value) -> {
+        CycleButton<SortMethod> buttonWidget = CycleButton.<SortMethod>builder(value -> Component.translatable("options.scoreboard-helper.edit_score.sort_method." + value.toString()))
+                .withValues(SortMethod.values())
+                .withInitialValue(sortMethod)
+                .create(width / 2 - 10 - 200, height - 60, 170, 20, Component.translatable(getTranslationKey("sort_method")), ((button, value) -> {
                     this.sortMethod = value;
                     this.reversedSortButton.active = this.sortMethod != SortMethod.NONE;
                     this.widget.resort();
                 }));
-        this.widget = new EditingScoreListWidget(client, this);
-        addSelectableChild(widget);
-        addDrawableChild(buttonWidget);
-        this.reversedSortButton = new ButtonWidget.Builder(this.reversedSort ? Text.literal("↑") : Text.literal("↓"), this::switchReversedSort).size(20, 20).position(width / 2 - 10 - 20, height - 60).build();
-        addDrawableChild(this.reversedSortButton);
-        this.addButton = new ButtonWidget.Builder(Text.translatable(getTranslationKey("add")), this::addEntry).size(200, 20).position(width / 2 + 10, height - 60).build();
-        addDrawableChild(this.addButton);
-        addDrawableChild(new ButtonWidget.Builder(Text.translatable(getTranslationKey("close")), button -> close()).size(200, 20).position(width / 2 + 10, height - 30).build());
-        this.submitButton = new ButtonWidget.Builder(Text.translatable(getTranslationKey("save")), button -> submit()).size(200, 20).position(width / 2 - 10 - 200, height - 30).build();
-        addDrawableChild(this.submitButton);
+        this.widget = new EditingScoreListWidget(minecraft, this);
+        addWidget(widget);
+        addRenderableWidget(buttonWidget);
+        this.reversedSortButton = new Button.Builder(this.reversedSort ? Component.literal("↑") : Component.literal("↓"), this::switchReversedSort).size(20, 20).pos(width / 2 - 10 - 20, height - 60).build();
+        addRenderableWidget(this.reversedSortButton);
+        this.addButton = new Button.Builder(Component.translatable(getTranslationKey("add")), this::addEntry).size(200, 20).pos(width / 2 + 10, height - 60).build();
+        addRenderableWidget(this.addButton);
+        addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("close")), button -> onClose()).size(200, 20).pos(width / 2 + 10, height - 30).build());
+        this.submitButton = new Button.Builder(Component.translatable(getTranslationKey("save")), button -> submit()).size(200, 20).pos(width / 2 - 10 - 200, height - 30).build();
+        addRenderableWidget(this.submitButton);
     }
 
     public SortMethod getSortMethod() {
@@ -95,17 +95,17 @@ public class ScoreEditingScreen extends Screen {
         return "options.scoreboard-helper.edit_score." + key;
     }
 
-    private void switchReversedSort(ButtonWidget buttonWidget) {
+    private void switchReversedSort(Button buttonWidget) {
         this.reversedSort = !this.reversedSort;
         if (this.reversedSort) {
-            buttonWidget.setMessage(Text.literal("↑"));
+            buttonWidget.setMessage(Component.literal("↑"));
         } else {
-            buttonWidget.setMessage(Text.literal("↓"));
+            buttonWidget.setMessage(Component.literal("↓"));
         }
         this.widget.resort();
     }
 
-    private void addEntry(ButtonWidget buttonWidget) {
+    private void addEntry(Button buttonWidget) {
         SingleScore entry = new SingleScore("", 0);
         this.scores.add(entry);
         this.widget.addSingleScore(entry);
@@ -114,24 +114,24 @@ public class ScoreEditingScreen extends Screen {
     }
 
     private void submit() {
-        if (client != null && client.world != null && client.player != null) {
-            Scoreboard sb = client.world.getScoreboard();
-            ScoreboardObjective objective = ScoreboardHelperUtils.getSidebarObjective(sb, client.player);
+        if (minecraft != null && minecraft.level != null && minecraft.player != null) {
+            Scoreboard sb = minecraft.level.getScoreboard();
+            Objective objective = ScoreboardHelperUtils.getSidebarObjective(sb, minecraft.player);
             List<ScoreModification> scoreModifications = getScoreModifications(sb, objective);
             for (ScoreModification m: scoreModifications) {
-                client.player.networkHandler.sendChatCommand(m.getModificationCommand());
+                minecraft.player.connection.sendCommand(m.getModificationCommand());
             }
             if (scoreModifications.isEmpty()) {
-                client.player.sendMessage(Text.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             }
-            close();
+            onClose();
         }
     }
 
     @NotNull
-    private List<ScoreModification> getScoreModifications(Scoreboard sb, ScoreboardObjective objective) {
+    private List<ScoreModification> getScoreModifications(Scoreboard sb, Objective objective) {
         List<ScoreModification> scoreModifications = new ArrayList<>();
-        List<SingleScore> list = sb.getScoreboardEntries(objective).stream().map(score -> new SingleScore(score.owner(), score.value())).toList();
+        List<SingleScore> list = sb.listPlayerScores(objective).stream().map(score -> new SingleScore(score.owner(), score.value())).toList();
         Map<String, SingleScore> map = new HashMap<>();
         for (SingleScore score: scores) {
             map.put(score.name, score);
@@ -156,16 +156,16 @@ public class ScoreEditingScreen extends Screen {
     }
 
     @Override
-    public void close() {
-        Objects.requireNonNull(client).setScreen(parent);
+    public void onClose() {
+        Objects.requireNonNull(minecraft).setScreen(parent);
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         this.widget.render(context, mouseX, mouseY, delta);
         int TITLE_Y = 8;
-        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, TITLE_Y, 0xFFFFFF);
+        context.drawCenteredString(font, title, width / 2, TITLE_Y, 0xFFFFFF);
     }
 
     public List<SingleScore> getScores() {

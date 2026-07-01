@@ -6,11 +6,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import top.pigest.scoreboardhelper.config.ScoreboardHelperConfig;
 
 public class SBHelperCommand {
-    private static final SimpleCommandExceptionType INVALID_COUNT_EXCEPTION = new SimpleCommandExceptionType(Text.translatable("commands.sbhelper.invalidCount"));
+    private static final SimpleCommandExceptionType INVALID_COUNT_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.sbhelper.invalidCount"));
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(ClientCommandManager.literal("sbhelper")
@@ -26,7 +26,7 @@ public class SBHelperCommand {
             throw INVALID_COUNT_EXCEPTION.create();
         }
         ScoreboardHelperConfig.INSTANCE.maxShowCount.setValue(count);
-        source.sendFeedback(Text.translatable("commands.sbhelper.success.setMaxCount", count));
+        source.sendFeedback(Component.translatable("commands.sbhelper.success.setMaxCount", count));
         return count;
     }
 }

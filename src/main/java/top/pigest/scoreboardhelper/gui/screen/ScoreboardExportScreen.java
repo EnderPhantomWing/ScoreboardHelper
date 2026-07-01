@@ -1,18 +1,18 @@
 package top.pigest.scoreboardhelper.gui.screen;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.scoreboard.ScoreboardEntry;
-import net.minecraft.scoreboard.ScoreboardObjective;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Pair;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.PlayerScoreEntry;
+import net.minecraft.world.scores.Objective;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.util.Tuple;
 import top.pigest.scoreboardhelper.ScoreboardHelper;
 import top.pigest.scoreboardhelper.gui.widget.ScoreboardExportListWidget;
 import top.pigest.scoreboardhelper.util.ScoreboardHelperUtils;
@@ -31,7 +31,7 @@ public class ScoreboardExportScreen extends Screen {
     private ScoreboardExportListWidget scoreboardExportListWidget;
 
     public ScoreboardExportScreen(Screen parent) {
-        super(Text.translatable(getTranslationKey("title")));
+        super(Component.translatable(getTranslationKey("title")));
         this.parent = parent;
     }
 
@@ -41,37 +41,37 @@ public class ScoreboardExportScreen extends Screen {
 
     @Override
     protected void init() {
-        this.scoreboardExportListWidget = new ScoreboardExportListWidget(client, this);
-        addSelectableChild(this.scoreboardExportListWidget);
+        this.scoreboardExportListWidget = new ScoreboardExportListWidget(minecraft, this);
+        addWidget(this.scoreboardExportListWidget);
 
-        addDrawableChild(new ButtonWidget.Builder(Text.translatable(getTranslationKey("record")), button -> {
+        addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("record")), button -> {
             boolean returnVal = record();
             if (!returnVal) {
-                close();
+                onClose();
             }
-        }).size(200, 20).position(width / 2 - 10 - 200, height - 40 - 30).build());
-        addDrawableChild(new ButtonWidget.Builder(Text.translatable(getTranslationKey("direct")), button -> {
+        }).size(200, 20).pos(width / 2 - 10 - 200, height - 40 - 30).build());
+        addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("direct")), button -> {
             tryExport();
-            close();
-        }).size(200, 20).position(width / 2 - 10 - 200, height - 40).build());
-        addDrawableChild(new ButtonWidget.Builder(Text.translatable(getTranslationKey("finish")), button -> {
+            onClose();
+        }).size(200, 20).pos(width / 2 - 10 - 200, height - 40).build());
+        addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("finish")), button -> {
             exportAll();
-            close();
-        }).size(200, 20).position(width / 2 + 10, height - 40 - 30).build());
-        addDrawableChild(new ButtonWidget.Builder(Text.translatable(getTranslationKey("close")), button -> close()).size(200, 20).position(width / 2 + 10, height - 40).build());
+            onClose();
+        }).size(200, 20).pos(width / 2 + 10, height - 40 - 30).build());
+        addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("close")), button -> onClose()).size(200, 20).pos(width / 2 + 10, height - 40).build());
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         this.scoreboardExportListWidget.render(context, mouseX, mouseY, delta);
         int TITLE_Y = 8;
-        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, TITLE_Y, 0xFFFFFF);
+        context.drawCenteredString(font, title, width / 2, TITLE_Y, 0xFFFFFF);
     }
 
     @Override
-    public void close() {
-        Objects.requireNonNull(client).setScreen(parent);
+    public void onClose() {
+        Objects.requireNonNull(minecraft).setScreen(parent);
     }
 
     private static String getTranslationKey(String key) {
@@ -79,21 +79,21 @@ public class ScoreboardExportScreen extends Screen {
     }
 
     public void refresh() {
-        this.clearAndInit();
+        this.rebuildWidgets();
     }
 
     private boolean record() {
-        if (client != null && client.player != null) {
-            Scoreboard scoreboard = client.player.getScoreboard();
-            ScoreboardObjective scoreboardObjective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, client.player);
+        if (minecraft != null && minecraft.player != null) {
+            Scoreboard scoreboard = minecraft.player.getScoreboard();
+            Objective scoreboardObjective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, minecraft.player);
             if(scoreboardObjective == null) {
-                client.player.sendMessage(Text.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                 return false;
             } else {
-                List<ScoreboardEntry> scoreboardEntries = new ArrayList<>(scoreboard.getScoreboardEntries(scoreboardObjective));
+                List<PlayerScoreEntry> scoreboardEntries = new ArrayList<>(scoreboard.listPlayerScores(scoreboardObjective));
                 RecordEntry entry = new RecordEntry(scoreboardObjective.getDisplayName());
-                for(ScoreboardEntry entry1: scoreboardEntries) {
-                    entry.scores.add(new Pair<>(entry1.owner(), entry1.value()));
+                for(PlayerScoreEntry entry1: scoreboardEntries) {
+                    entry.scores.add(new Tuple<>(entry1.owner(), entry1.value()));
                 }
                 entries.removeIf(entry1 -> entry1.displayName.equals(scoreboardObjective.getDisplayName()));
                 entries.add(entry);
@@ -105,19 +105,19 @@ public class ScoreboardExportScreen extends Screen {
     }
 
     private void tryExport() {
-        if (client != null && client.player != null) {
-            Scoreboard scoreboard = client.player.getScoreboard();
-            ScoreboardObjective scoreboardObjective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, client.player);
+        if (minecraft != null && minecraft.player != null) {
+            Scoreboard scoreboard = minecraft.player.getScoreboard();
+            Objective scoreboardObjective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, minecraft.player);
             if(scoreboardObjective == null) {
-                client.player.sendMessage(Text.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             } else {
                 export(scoreboardObjective, scoreboard);
             }
         }
     }
 
-    private void export(ScoreboardObjective scoreboardObjective, Scoreboard scoreboard) {
-        List<ScoreboardEntry> scores = new ArrayList<>(scoreboard.getScoreboardEntries(scoreboardObjective));
+    private void export(Objective scoreboardObjective, Scoreboard scoreboard) {
+        List<PlayerScoreEntry> scores = new ArrayList<>(scoreboard.listPlayerScores(scoreboardObjective));
         String name = scoreboardObjective.getName() + ".csv";
         Path path = FabricLoader.getInstance().getGameDir().resolve("scoreboard-exports");
         File file = path.resolve(name).toFile();
@@ -125,55 +125,55 @@ public class ScoreboardExportScreen extends Screen {
             try {
                 Files.createDirectories(path);
             } catch (IOException e) {
-                if (client != null && client.player != null) {
-                    client.player.sendMessage(Text.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                if (minecraft != null && minecraft.player != null) {
+                    minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                     ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
                 }
             }
         }
         try (FileWriter writer = new FileWriter(file)) {
             StringBuilder p = new StringBuilder();
-            p.append(Text.translatable(getTranslationKey("chart.player")).getString())
+            p.append(Component.translatable(getTranslationKey("chart.player")).getString())
                     .append(",")
-                    .append(Text.translatable(getTranslationKey("chart.score")).getString())
+                    .append(Component.translatable(getTranslationKey("chart.score")).getString())
                     .append("\n");
             for(int i = scores.size() - 1; i >= 0; i--) {
-                ScoreboardEntry score = scores.get(i);
-                p.append(score.name().getLiteralString()).append(",").append(score.value()).append("\n");
+                PlayerScoreEntry score = scores.get(i);
+                p.append(score.ownerName().tryCollapseToString()).append(",").append(score.value()).append("\n");
             }
             writer.write(String.valueOf(p));
             sendSuccessMessage(name, file);
         } catch (IOException e) {
-            if (client != null && client.player != null) {
-                client.player.sendMessage(Text.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            if (minecraft != null && minecraft.player != null) {
+                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                 ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
             }
         }
     }
 
     private void sendSuccessMessage(String name, File file) {
-        Text text = Text.literal(name).setStyle(Style.EMPTY.withUnderline(true).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())));
-        MutableText text1 = Text.translatable("hint.scoreboard-helper.export.success", text);
-        if (client != null) {
-            if (client.player != null) {
-                client.player.sendMessage(text1);
+        Component text = Component.literal(name).setStyle(Style.EMPTY.withUnderlined(true).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())));
+        MutableComponent text1 = Component.translatable("hint.scoreboard-helper.export.success", text);
+        if (minecraft != null) {
+            if (minecraft.player != null) {
+                minecraft.player.sendSystemMessage(text1);
             }
         }
     }
 
     private void exportAll() {
-        if (client != null && client.player != null) {
+        if (minecraft != null && minecraft.player != null) {
             if (this.entries.isEmpty()) {
-                client.player.sendMessage(Text.translatable("hint.scoreboard-player.export.fail.no_entry").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-player.export.fail.no_entry").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             } else {
                 Set<String> playerNames = new TreeSet<>();
                 for(RecordEntry entry: entries) {
-                    for(Pair<String, Integer> pair: entry.scores) {
-                        playerNames.add(pair.getLeft());
+                    for(Tuple<String, Integer> pair: entry.scores) {
+                        playerNames.add(pair.getA());
                     }
                 }
                 List<String> export = new ArrayList<>();
-                StringBuilder head = new StringBuilder(Text.translatable(getTranslationKey("chart.player")).getString());
+                StringBuilder head = new StringBuilder(Component.translatable(getTranslationKey("chart.player")).getString());
                 for(RecordEntry entry: entries) {
                     head.append(",").append(entry.displayName.getString());
                 }
@@ -182,8 +182,8 @@ public class ScoreboardExportScreen extends Screen {
                     StringBuilder s = new StringBuilder(playerName);
                     for(RecordEntry entry: entries) {
                         s.append(",");
-                        Optional<Pair<String, Integer>> optional = entry.scores.stream().filter(pair -> pair.getLeft().equals(playerName)).findFirst();
-                        optional.ifPresent(stringIntegerPair -> s.append(stringIntegerPair.getRight()));
+                        Optional<Tuple<String, Integer>> optional = entry.scores.stream().filter(pair -> pair.getA().equals(playerName)).findFirst();
+                        optional.ifPresent(stringIntegerPair -> s.append(stringIntegerPair.getB()));
                     }
                     export.add(s.toString());
                 }
@@ -194,7 +194,7 @@ public class ScoreboardExportScreen extends Screen {
                     try {
                         Files.createDirectories(path);
                     } catch (IOException e) {
-                        client.player.sendMessage(Text.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                        minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                         ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
                     }
                 }
@@ -204,8 +204,8 @@ public class ScoreboardExportScreen extends Screen {
                     }
                     sendSuccessMessage(name, file);
                 } catch (IOException e) {
-                    if (client != null && client.player != null) {
-                        client.player.sendMessage(Text.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                    if (minecraft != null && minecraft.player != null) {
+                        minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                         ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
                     }
                 }
@@ -218,14 +218,14 @@ public class ScoreboardExportScreen extends Screen {
     }
 
     public static class RecordEntry {
-        private final Text displayName;
-        public final List<Pair<String, Integer>> scores = new ArrayList<>();
+        private final Component displayName;
+        public final List<Tuple<String, Integer>> scores = new ArrayList<>();
 
-        public RecordEntry(Text displayName) {
+        public RecordEntry(Component displayName) {
             this.displayName = displayName;
         }
 
-        public Text getDisplayName() {
+        public Component getDisplayName() {
             return displayName;
         }
     }
