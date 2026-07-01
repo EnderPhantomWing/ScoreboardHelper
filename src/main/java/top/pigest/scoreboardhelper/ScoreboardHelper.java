@@ -90,7 +90,10 @@ public class ScoreboardHelper implements ClientModInitializer {
                     Scoreboard scoreboard = client.level.getScoreboard();
                     Objective objective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, client.player);
                     if(objective == null) {
+                        //#if MC >= 1.21.3
+                        //$$ client.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                         client.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                        //#endif
                     } else {
                         client.setScreen(new ScoreEditingScreen(client.screen, scoreboard, objective));
                     }

@@ -112,7 +112,11 @@ public class ScoreboardExportScreen extends Screen {
             Scoreboard scoreboard = minecraft.player.getScoreboard();
             Objective scoreboardObjective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, minecraft.player);
             if(scoreboardObjective == null) {
+                //#if MC >= 1.21.3
+                //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
+                //#else
                 minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                //#endif
                 return false;
             } else {
                 List<PlayerScoreEntry> scoreboardEntries = new ArrayList<>(scoreboard.listPlayerScores(scoreboardObjective));
@@ -134,7 +138,10 @@ public class ScoreboardExportScreen extends Screen {
             Scoreboard scoreboard = minecraft.player.getScoreboard();
             Objective scoreboardObjective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, minecraft.player);
             if(scoreboardObjective == null) {
+                //#if MC >= 1.21.3
+                //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                 minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                //#endif
             } else {
                 export(scoreboardObjective, scoreboard);
             }
@@ -151,7 +158,10 @@ public class ScoreboardExportScreen extends Screen {
                 Files.createDirectories(path);
             } catch (IOException e) {
                 if (minecraft != null && minecraft.player != null) {
+                    //# if MC >= 1.21.3
+                    //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                     minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                    //#endif
                     ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
                 }
             }
@@ -170,7 +180,10 @@ public class ScoreboardExportScreen extends Screen {
             sendSuccessMessage(name, file);
         } catch (IOException e) {
             if (minecraft != null && minecraft.player != null) {
+                //#if MC >= 1.21.3
+                //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                 minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                //#endif
                 ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
             }
         }
@@ -189,7 +202,10 @@ public class ScoreboardExportScreen extends Screen {
     private void exportAll() {
         if (minecraft != null && minecraft.player != null) {
             if (this.entries.isEmpty()) {
+                //#if MC >= 1.21.3
+                //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-player.export.fail.no_entry").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                 minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-player.export.fail.no_entry").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                //#endif
             } else {
                 Set<String> playerNames = new TreeSet<>();
                 for(RecordEntry entry: entries) {
@@ -219,7 +235,10 @@ public class ScoreboardExportScreen extends Screen {
                     try {
                         Files.createDirectories(path);
                     } catch (IOException e) {
+                        //#if MC >= 1.21.3
+                        //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                         minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                        //#endif
                         ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
                     }
                 }
@@ -230,6 +249,8 @@ public class ScoreboardExportScreen extends Screen {
                     sendSuccessMessage(name, file);
                 } catch (IOException e) {
                     if (minecraft != null && minecraft.player != null) {
+                        //#if MC >= 1.21.3
+                        //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                         minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                         ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
                     }

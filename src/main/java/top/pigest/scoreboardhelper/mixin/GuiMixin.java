@@ -91,7 +91,11 @@ public abstract class GuiMixin {
             j = Math.max(j, this.getFont().width(sidebarEntry.name()) + (sidebarEntry.scoreWidth() > 0 && config.sidebarScoreShown.getValue() ? joinerWidth + sidebarEntry.scoreWidth() : 0));
         }
         int finalJ = j;
+        //#if MC >= 1.21.3
+        //$$ context.drawSpecial((consumer) -> {
+        //#else
         context.drawManaged(() -> {
+        //#endif
             int length = sidebarEntries.length;
             int m = switch(config.sidebarPosition.getValue()) {
                 case LEFT, RIGHT -> context.guiHeight() / 2 + length * 3;

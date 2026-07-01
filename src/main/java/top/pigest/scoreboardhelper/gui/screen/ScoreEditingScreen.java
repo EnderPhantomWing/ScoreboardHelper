@@ -147,6 +147,8 @@ public class ScoreEditingScreen extends Screen {
                 minecraft.player.connection.sendCommand(m.getModificationCommand());
             }
             if (scoreModifications.isEmpty()) {
+                //#if MC >= 1.21.3
+                //$$ minecraft.player.displayClientMessage(Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                 minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             }
             onClose();
