@@ -1,26 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "scoreboard-helper",
-  "version": "${version}",
-  "name": "ScoreboardHelper",
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
   "description": "Provides a few extra functions to use Minecraft Scoreboard more easily.",
   "authors": [
-    "xiaozhu_zhizui"
+    "xiaozhu_zhizui",
+    "EnderPhantomWing"
   ],
   "contact": {
-    "homepage": "https://www.pigest.top/2023/scoreboard-helper",
-    "sources": "https://github.com/TmallKing1/ScoreboardHelper",
-    "issues": "https://github.com/TmallKing1/ScoreboardHelper/issues"
+    "homepage": "https://github.com/EnderPhantomWing/ScoreboardHelper",
+    "sources": "https://github.com/EnderPhantomWing/ScoreboardHelper",
+    "issues": "https://github.com/EnderPhantomWing/ScoreboardHelper/issues"
   },
   "icon": "assets/scoreboard-helper/icon.png",
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.modrinth": "https://modrinth.com/mod/scoreboard-helper"
+        "modmenu.modrinth": "https://modrinth.com/mod/scoreboard-helper-port"
       }
     }
   },
-  "license": "MIT",
+  "license": "${mod_license}",
   "environment": "client",
   "entrypoints": {
     "client": [
@@ -36,6 +37,6 @@
   "depends": {
     "fabricloader": ">=0.15.11",
     "fabric": "*",
-    "minecraft": ">=1.20.5"
+    "minecraft": "${minecraft_dependency}"
   }
 }
