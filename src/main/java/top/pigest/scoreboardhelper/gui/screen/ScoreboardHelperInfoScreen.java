@@ -50,7 +50,9 @@ public class ScoreboardHelperInfoScreen extends Screen {
 
     @Override
     public void onClose() {
+        //#if MC < 26.2
         Objects.requireNonNull(minecraft).setScreen(parent);
+        //#endif
     }
 
     @Override

@@ -25,6 +25,7 @@
 
 package top.pigest.scoreboardhelper.mixin;
 
+//#if MC < 26.2
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -157,9 +158,17 @@ public abstract class GuiMixin {
     //$$     for (int i = 0; i < length; i++) {
     //$$         SidebarEntry entry = sidebarEntries[i];
     //$$         int y = verticalPos - (length - i) * lineHeight;
+    //$$         //#if MC >= 26.1
+    //$$         //$$ guiGraphics.text(this.getFont(), entry.name(), horizontalPos, y, textColor, false);
+    //$$         //#else
     //$$         guiGraphics.drawString(this.getFont(), entry.name(), horizontalPos, y, textColor, false);
+    //$$         //#endif
     //$$         if (showScore) {
+    //$$             //#if MC >= 26.1
+    //$$             //$$ guiGraphics.text(
+    //$$             //#else
     //$$             guiGraphics.drawString(
+    //$$             //#endif
     //$$                     this.getFont(),
     //$$                     entry.score(),
     //$$                     rightBound - entry.scoreWidth(),
@@ -237,3 +246,4 @@ public abstract class GuiMixin {
     }
     //#endif
 }
+//#endif

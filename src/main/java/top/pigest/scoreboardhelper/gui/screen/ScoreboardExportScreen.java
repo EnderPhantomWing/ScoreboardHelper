@@ -91,12 +91,18 @@ public class ScoreboardExportScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         this.scoreboardExportListWidget.render(context, mouseX, mouseY, delta);
         int TITLE_Y = 8;
+        //#if MC >= 1.21.8
+        //$$ context.drawCenteredString(font, title.getVisualOrderText(), width / 2, TITLE_Y, 0xFFFFFF);
+        //#else
         context.drawCenteredString(font, title, width / 2, TITLE_Y, 0xFFFFFF);
+        //#endif
     }
 
     @Override
     public void onClose() {
+        //#if MC < 26.2
         Objects.requireNonNull(minecraft).setScreen(parent);
+        //#endif
     }
 
     private static String getTranslationKey(String key) {

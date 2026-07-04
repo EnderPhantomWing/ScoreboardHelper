@@ -163,13 +163,19 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
             button.setMessage(this.nameField.visible ? Component.literal("✔") : Component.literal("✏"));
             if (!this.nameField.visible) {
                 if (this.nameField.getValue().isEmpty()) {
+                    //#if MC < 26.2
                     minecraft.setScreen(new ScoreboardHelperInfoScreen(EditingScoreListWidget.this.parent, ScoreboardHelperInfoScreen.InfoType.ERROR, Component.translatable("hint.scoreboard-helper.edit_score.fail.name_is_empty")));
+                    //#endif
                     this.removeIfNew();
                 } else if (this.nameField.getValue().contains(" ")) {
+                    //#if MC < 26.2
                     minecraft.setScreen(new ScoreboardHelperInfoScreen(EditingScoreListWidget.this.parent, ScoreboardHelperInfoScreen.InfoType.ERROR, Component.translatable("hint.scoreboard-helper.edit_score.fail.no_space_in_name")));
+                    //#endif
                     this.removeIfNew();
                 } else if (!widget.children().stream().filter(entry -> entry.name.equals(this.nameField.getValue()) && entry != this).toList().isEmpty()) {
+                    //#if MC < 26.2
                     minecraft.setScreen(new ScoreboardHelperInfoScreen(EditingScoreListWidget.this.parent, ScoreboardHelperInfoScreen.InfoType.ERROR, Component.translatable("hint.scoreboard-helper.edit_score.fail.name_exist")));
+                    //#endif
                     this.removeIfNew();
                 } else {
                     this.name = this.nameField.getValue();
@@ -202,13 +208,37 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
         }
 
         //#if MC >= 1.21.10
+        //$$ //#if MC >= 26.1
+        //$$ //$$ @Override
+        //$$ //$$ public void extractContent(GuiGraphicsExtractor context, int index, int y, boolean hovered, float tickDelta) {
+        //$$ //$$     int x = this.getX();
+        //$$ //$$     int entryWidth = this.getWidth();
+        //$$ //$$     int entryHeight = this.getHeight();
+        //$$ //$$     double s = EditingScoreListWidget.this.minecraft.getWindow().getGuiScale();
+        //$$ //$$     int mouseX = (int)(EditingScoreListWidget.this.minecraft.mouseHandler.xpos() / s);
+        //$$ //$$     int mouseY = (int)(EditingScoreListWidget.this.minecraft.mouseHandler.ypos() / s);
+        //$$ //$$     if (!this.nameField.visible) {
+        //$$ //$$         Component text = Component.nullToEmpty(this.name);
+        //$$ //$$         context.text(EditingScoreListWidget.this.minecraft.font, text, x + 20 + 5, y + entryHeight / 2 - EditingScoreListWidget.this.minecraft.font.lineHeight / 2, 0xFFFFFF, false);
+        //$$ //$$     }
+        //$$ //$$     this.nameField.setPosition(x + 20 + 5, y);
+        //$$ //$$     this.nameField.extractRenderState(context, mouseX, mouseY, tickDelta);
+        //$$ //$$     this.editButton.setPosition(x, y);
+        //$$ //$$     this.editButton.extractRenderState(context, mouseX, mouseY, tickDelta);
+        //$$ //$$     this.scoreField.setPosition(x + 130, y);
+        //$$ //$$     this.scoreField.extractRenderState(context, mouseX, mouseY, tickDelta);
+        //$$ //$$     this.deleteButton.setPosition(x + 130 + 80 + 5, y);
+        //$$ //$$     this.deleteButton.extractRenderState(context, mouseX, mouseY, tickDelta);
+        //$$ //$$ }
+        //$$ //#else
         //$$ @Override
         //$$ public void renderContent(GuiGraphics context, int index, int y, boolean hovered, float tickDelta) {
         //$$     int x = this.getX();
         //$$     int entryWidth = this.getWidth();
         //$$     int entryHeight = this.getHeight();
-        //$$     int mouseX = (int) EditingScoreListWidget.this.minecraft.mouseHandler.xpos();
-        //$$     int mouseY = (int) EditingScoreListWidget.this.minecraft.mouseHandler.ypos();
+        //$$     double s = EditingScoreListWidget.this.minecraft.getWindow().getGuiScale();
+        //$$     int mouseX = (int)(EditingScoreListWidget.this.minecraft.mouseHandler.xpos() / s);
+        //$$     int mouseY = (int)(EditingScoreListWidget.this.minecraft.mouseHandler.ypos() / s);
         //$$     if (!this.nameField.visible) {
         //$$         Component text = Component.nullToEmpty(this.name);
         //$$         context.drawString(EditingScoreListWidget.this.minecraft.font, text, x + 20 + 5, y + entryHeight / 2 - EditingScoreListWidget.this.minecraft.font.lineHeight / 2, 0xFFFFFF, false);
@@ -222,6 +252,7 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
         //$$     this.deleteButton.setPosition(x + 130 + 80 + 5, y);
         //$$     this.deleteButton.render(context, mouseX, mouseY, tickDelta);
         //$$ }
+        //$$ //#endif
         //#else
         @Override
         public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {

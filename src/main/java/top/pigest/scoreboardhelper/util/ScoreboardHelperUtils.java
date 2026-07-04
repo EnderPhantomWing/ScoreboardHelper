@@ -35,6 +35,7 @@ import net.minecraft.world.scores.PlayerTeam;
 
 public class ScoreboardHelperUtils {
     public static Objective getSidebarObjective(Scoreboard scoreboard, LocalPlayer player) {
+        //#if MC < 26.2
         PlayerTeam team = scoreboard.getPlayersTeam(player.getScoreboardName());
         Objective objective = null;
         if (team != null && DisplaySlot.teamColorToSlot(team.getColor()) != null) {
@@ -42,9 +43,13 @@ public class ScoreboardHelperUtils {
         }
         objective = objective != null ? objective : scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR);
         return objective;
+        //#else
+        //$$ return scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR);
+        //#endif
     }
 
     public static void sendClientMessage(Minecraft client, Component message) {
+        //#if MC < 26.1
         if (client != null && client.player != null) {
             //#if MC >= 1.21.3
             //$$ client.gui.getChat().addMessage(message);
@@ -52,6 +57,7 @@ public class ScoreboardHelperUtils {
             client.player.sendSystemMessage(message);
             //#endif
         }
+        //#endif
     }
 
 }

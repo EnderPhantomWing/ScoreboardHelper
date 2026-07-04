@@ -1,0 +1,20 @@
+net.minecraft.client.gui.GuiGraphics net.minecraft.client.gui.GuiGraphicsExtractor
+net.minecraft.client.gui.GuiGraphics drawString() text()
+net.minecraft.client.gui.GuiGraphics drawCenteredString() centeredText()
+net.minecraft.client.gui.GuiGraphicsExtractor drawString() text()
+net.minecraft.client.gui.GuiGraphicsExtractor drawCenteredString() centeredText()
+
+net.minecraft.client.gui.screens.Screen renderBackground() extractBackground()
+net.minecraft.client.gui.screens.Screen render() extractRenderState()
+
+net.minecraft.client.gui.components.AbstractButton renderDefaultSprite() extractDefaultSprite()
+net.minecraft.client.gui.components.AbstractButton renderDefaultLabel() extractDefaultLabel()
+net.minecraft.client.gui.components.AbstractWidget render() extractRenderState()
+
+net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry playC2S() serverboundPlay()
+net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry playS2C() clientboundPlay()
+net.fabricmc.fabric.api.client.command.v2.ClientCommandManager net.fabricmc.fabric.api.client.command.v2.ClientCommands
+net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
+net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper registerKeyBinding() registerKeyMapping()
+
+net.kyrptonaught.kyrptconfig.config.screen.NotSuckyButton renderContents() extractContents()

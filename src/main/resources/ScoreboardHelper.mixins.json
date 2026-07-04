@@ -8,7 +8,8 @@
   "client": [
     "ChatScreenMixin",
     "ClientPacketListenerMixin",
-    "GuiMixin"
+    "GuiMixin",
+    "HudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

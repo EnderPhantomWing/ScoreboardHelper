@@ -96,10 +96,25 @@ public class PropertyListWidget extends ContainerObjectSelectionList<PropertyLis
         }
 
         //#if MC >= 1.21.10
+        //$$ //#if MC >= 26.1
+        //$$ //$$ @Override
+        //$$ //$$ public void extractContent(GuiGraphicsExtractor context, int index, int y, boolean hovered, float tickDelta) {
+        //$$ //$$     double s = Minecraft.getInstance().getWindow().getGuiScale();
+        //$$ //$$     int mouseX = (int)(Minecraft.getInstance().mouseHandler.xpos() / s);
+        //$$ //$$     int mouseY = (int)(Minecraft.getInstance().mouseHandler.ypos() / s);
+        //$$ //$$     this.widgets.forEach(
+        //$$ //$$             widget -> {
+        //$$ //$$                 widget.setY(y);
+        //$$ //$$                 widget.extractRenderState(context, mouseX, mouseY, tickDelta);
+        //$$ //$$             }
+        //$$ //$$     );
+        //$$ //$$ }
+        //$$ //#else
         //$$ @Override
         //$$ public void renderContent(GuiGraphics context, int index, int y, boolean hovered, float tickDelta) {
-        //$$     int mouseX = (int) Minecraft.getInstance().mouseHandler.xpos();
-        //$$     int mouseY = (int) Minecraft.getInstance().mouseHandler.ypos();
+        //$$     double s = Minecraft.getInstance().getWindow().getGuiScale();
+        //$$     int mouseX = (int)(Minecraft.getInstance().mouseHandler.xpos() / s);
+        //$$     int mouseY = (int)(Minecraft.getInstance().mouseHandler.ypos() / s);
         //$$     this.widgets.forEach(
         //$$             widget -> {
         //$$                 widget.setY(y);
@@ -107,6 +122,7 @@ public class PropertyListWidget extends ContainerObjectSelectionList<PropertyLis
         //$$             }
         //$$     );
         //$$ }
+        //$$ //#endif
         //#else
         @Override
         public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {

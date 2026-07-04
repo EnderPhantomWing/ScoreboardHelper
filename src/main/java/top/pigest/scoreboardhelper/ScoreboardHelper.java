@@ -77,6 +77,7 @@ public class ScoreboardHelper implements ClientModInitializer {
                 ScoreboardHelperConfig.INSTANCE.scoreboardShown.setValue(!ScoreboardHelperConfig.INSTANCE.scoreboardShown.getValue());
                 Constants.CD_SWITCH_DISPLAY = 5;
             }
+            //#if MC < 26.2
             if (KeyBindings.KEY_BINDING_OPEN_CONFIG.isDown()) {
                 client.setScreen(new ScoreboardHelperConfigScreen(client.screen, ScoreboardHelperConfig.INSTANCE));
             }
@@ -97,6 +98,7 @@ public class ScoreboardHelper implements ClientModInitializer {
                 }
                 Constants.CD_EDIT = 5;
             }
+            //#endif
         });
     }
 }
