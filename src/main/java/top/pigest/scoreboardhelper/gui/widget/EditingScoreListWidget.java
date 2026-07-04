@@ -37,6 +37,7 @@ import net.minecraft.network.chat.Component;
 import top.pigest.scoreboardhelper.gui.screen.ScoreEditingScreen;
 import top.pigest.scoreboardhelper.gui.screen.ScoreboardHelperInfoScreen;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -56,19 +57,25 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
     }
 
     public void resort() {
-        List<Entry> entries = this.children();
         Comparator<Entry> comparator = null;
         switch (parent.getSortMethod()) {
             case NONE -> {
                 return;
             }
             case SCORE -> comparator = Comparator.comparingInt(value -> value.score);
-            case NAME -> comparator = Comparator.comparing(entry -> entry.name, String::compareToIgnoreCase);
+            case NAME -> comparator = Comparator.comparing(entry -> entry.name, Comparator.nullsLast(String::compareToIgnoreCase));
         }
         if (parent.isReversedSort()) {
             comparator = comparator.reversed();
         }
+        //#if MC >= 1.21.4
+        //$$ List<Entry> entries = new ArrayList<>(this.children());
+        //$$ entries.sort(comparator);
+        //$$ this.replaceEntries(entries);
+        //#else
+        List<Entry> entries = this.children();
         entries.sort(comparator);
+        //#endif
     }
 
     @Override
