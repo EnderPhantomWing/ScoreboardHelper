@@ -25,7 +25,9 @@
 
 package top.pigest.scoreboardhelper.util;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.DisplaySlot;
 import net.minecraft.world.scores.Objective;
@@ -40,6 +42,16 @@ public class ScoreboardHelperUtils {
         }
         objective = objective != null ? objective : scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR);
         return objective;
+    }
+
+    public static void sendClientMessage(Minecraft client, Component message) {
+        if (client != null && client.player != null) {
+            //#if MC >= 1.21.3
+            //$$ client.gui.getChat().addMessage(message);
+            //#else
+            client.player.sendSystemMessage(message);
+            //#endif
+        }
     }
 
 }

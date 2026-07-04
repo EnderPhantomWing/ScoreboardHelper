@@ -60,7 +60,14 @@ public class BooleanProperty extends BaseProperty<Boolean> {
         Component text = Component.translatable(Property.getTranslationKey(this.getKey(), TranslationKeyType.NORMAL));
         Component tooltip = Component.translatable(Property.getTranslationKey(this.getKey(), TranslationKeyType.TOOLTIP));
         Boolean[] values = new Boolean[] {true, false};
-        CycleButton<Boolean> positionCyclingButtonWidget = CycleButton.<Boolean>builder(value -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF).withValues(values).withInitialValue(this.getValue())
+        CycleButton<Boolean> positionCyclingButtonWidget = CycleButton.<Boolean>builder(value -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF
+                //#if MC >= 1.21.11
+                //$$ , this.getValue()
+                //#endif
+        ).withValues(values)
+                //#if MC < 1.21.11
+                .withInitialValue(this.getValue())
+                //#endif
                 .create(x, y, width, 20, text, (button, value) -> this.setValue(value));
         positionCyclingButtonWidget.setTooltip(Tooltip.create(tooltip));
         return positionCyclingButtonWidget;

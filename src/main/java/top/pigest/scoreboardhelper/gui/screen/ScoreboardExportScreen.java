@@ -109,14 +109,10 @@ public class ScoreboardExportScreen extends Screen {
 
     private boolean record() {
         if (minecraft != null && minecraft.player != null) {
-            Scoreboard scoreboard = minecraft.player.getScoreboard();
+            Scoreboard scoreboard = minecraft.level.getScoreboard();
             Objective scoreboardObjective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, minecraft.player);
             if(scoreboardObjective == null) {
-                //#if MC >= 1.21.3
-                //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#else
-                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#endif
+                ScoreboardHelperUtils.sendClientMessage(minecraft, Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                 return false;
             } else {
                 List<PlayerScoreEntry> scoreboardEntries = new ArrayList<>(scoreboard.listPlayerScores(scoreboardObjective));
@@ -124,7 +120,11 @@ public class ScoreboardExportScreen extends Screen {
                 for(PlayerScoreEntry entry1: scoreboardEntries) {
                     entry.scores.add(new Tuple<>(entry1.owner(), entry1.value()));
                 }
+                //#if MC >= 1.21.8
+                //$$ entries.removeIf(entry1 -> entry1.getDisplayNameString().equals(scoreboardObjective.getDisplayName().getString()));
+                //#else
                 entries.removeIf(entry1 -> entry1.displayName.equals(scoreboardObjective.getDisplayName()));
+                //#endif
                 entries.add(entry);
                 this.refresh();
                 return true;
@@ -135,14 +135,10 @@ public class ScoreboardExportScreen extends Screen {
 
     private void tryExport() {
         if (minecraft != null && minecraft.player != null) {
-            Scoreboard scoreboard = minecraft.player.getScoreboard();
+            Scoreboard scoreboard = minecraft.level.getScoreboard();
             Objective scoreboardObjective = ScoreboardHelperUtils.getSidebarObjective(scoreboard, minecraft.player);
             if(scoreboardObjective == null) {
-                //#if MC >= 1.21.3
-                //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#else
-                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#endif
+                ScoreboardHelperUtils.sendClientMessage(minecraft, Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             } else {
                 export(scoreboardObjective, scoreboard);
             }
@@ -158,14 +154,8 @@ public class ScoreboardExportScreen extends Screen {
             try {
                 Files.createDirectories(path);
             } catch (IOException e) {
-                if (minecraft != null && minecraft.player != null) {
-                    //#if MC >= 1.21.3
-                    //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                    //#else
-                    minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                    //#endif
-                    ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
-                }
+                ScoreboardHelperUtils.sendClientMessage(minecraft, Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
             }
         }
         try (FileWriter writer = new FileWriter(file)) {
@@ -181,14 +171,8 @@ public class ScoreboardExportScreen extends Screen {
             writer.write(String.valueOf(p));
             sendSuccessMessage(name, file);
         } catch (IOException e) {
-            if (minecraft != null && minecraft.player != null) {
-                //#if MC >= 1.21.3
-                //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#else
-                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#endif
-                ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
-            }
+            ScoreboardHelperUtils.sendClientMessage(minecraft, Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+            ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
         }
     }
 
@@ -199,25 +183,13 @@ public class ScoreboardExportScreen extends Screen {
         Component text = Component.literal(name).setStyle(Style.EMPTY.withUnderlined(true).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())));
         //#endif
         MutableComponent text1 = Component.translatable("hint.scoreboard-helper.export.success", text);
-        if (minecraft != null) {
-            if (minecraft.player != null) {
-                //#if MC >= 1.21.3
-                //$$ minecraft.gui.getChat().addMessage(text1);
-                //#else
-                minecraft.player.sendSystemMessage(text1);
-                //#endif
-            }
-        }
+        ScoreboardHelperUtils.sendClientMessage(minecraft, text1);
     }
 
     private void exportAll() {
         if (minecraft != null && minecraft.player != null) {
             if (this.entries.isEmpty()) {
-                //#if MC >= 1.21.3
-                //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-player.export.fail.no_entry").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#else
-                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-player.export.fail.no_entry").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#endif
+                ScoreboardHelperUtils.sendClientMessage(minecraft, Component.translatable("hint.scoreboard-player.export.fail.no_entry").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             } else {
                 Set<String> playerNames = new TreeSet<>();
                 for(RecordEntry entry: entries) {
@@ -228,7 +200,11 @@ public class ScoreboardExportScreen extends Screen {
                 List<String> export = new ArrayList<>();
                 StringBuilder head = new StringBuilder(Component.translatable(getTranslationKey("chart.player")).getString());
                 for(RecordEntry entry: entries) {
+                    //#if MC >= 1.21.8
+                    //$$ head.append(",").append(entry.getDisplayNameString());
+                    //#else
                     head.append(",").append(entry.displayName.getString());
+                    //#endif
                 }
                 export.add(head.toString());
                 for(String playerName: playerNames) {
@@ -247,11 +223,7 @@ public class ScoreboardExportScreen extends Screen {
                     try {
                         Files.createDirectories(path);
                     } catch (IOException e) {
-                        //#if MC >= 1.21.3
-                        //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                        //#else
-                        minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                        //#endif
+                        ScoreboardHelperUtils.sendClientMessage(minecraft, Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                         ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
                     }
                 }
@@ -261,14 +233,8 @@ public class ScoreboardExportScreen extends Screen {
                     }
                     sendSuccessMessage(name, file);
                 } catch (IOException e) {
-                    if (minecraft != null && minecraft.player != null) {
-                        //#if MC >= 1.21.3
-                        //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                        //#else
-                        minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                        //#endif
-                        ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
-                    }
+                    ScoreboardHelperUtils.sendClientMessage(minecraft, Component.translatable("hint.scoreboard-helper.export.fail.exception").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                    ScoreboardHelper.LOGGER.error("Failed to export scoreboard", e);
                 }
             }
         }
@@ -280,14 +246,31 @@ public class ScoreboardExportScreen extends Screen {
 
     public static class RecordEntry {
         private final Component displayName;
+        //#if MC >= 1.21.8
+        //$$ private final String displayNameString;
+        //#endif
         public final List<Tuple<String, Integer>> scores = new ArrayList<>();
 
         public RecordEntry(Component displayName) {
             this.displayName = displayName;
+            //#if MC >= 1.21.8
+            //$$ StringBuilder sb = new StringBuilder();
+            //$$ displayName.visit((style, text) -> {
+            //$$     sb.append(text);
+            //$$     return java.util.Optional.empty();
+            //$$ }, net.minecraft.network.chat.Style.EMPTY);
+            //$$ this.displayNameString = sb.toString();
+            //#endif
         }
 
         public Component getDisplayName() {
             return displayName;
         }
+
+        //#if MC >= 1.21.8
+        //$$ public String getDisplayNameString() {
+        //$$     return this.displayNameString;
+        //$$ }
+        //#endif
     }
 }

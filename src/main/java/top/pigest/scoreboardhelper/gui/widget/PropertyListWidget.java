@@ -95,6 +95,19 @@ public class PropertyListWidget extends ContainerObjectSelectionList<PropertyLis
             return widgets;
         }
 
+        //#if MC >= 1.21.10
+        //$$ @Override
+        //$$ public void renderContent(GuiGraphics context, int index, int y, boolean hovered, float tickDelta) {
+        //$$     int mouseX = (int) Minecraft.getInstance().mouseHandler.xpos();
+        //$$     int mouseY = (int) Minecraft.getInstance().mouseHandler.ypos();
+        //$$     this.widgets.forEach(
+        //$$             widget -> {
+        //$$                 widget.setY(y);
+        //$$                 widget.render(context, mouseX, mouseY, tickDelta);
+        //$$             }
+        //$$     );
+        //$$ }
+        //#else
         @Override
         public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             this.widgets.forEach(
@@ -104,5 +117,6 @@ public class PropertyListWidget extends ContainerObjectSelectionList<PropertyLis
                     }
             );
         }
+        //#endif
     }
 }

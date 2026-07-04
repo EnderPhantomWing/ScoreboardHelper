@@ -201,6 +201,28 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
             return ImmutableList.of(editButton, nameField, scoreField, deleteButton);
         }
 
+        //#if MC >= 1.21.10
+        //$$ @Override
+        //$$ public void renderContent(GuiGraphics context, int index, int y, boolean hovered, float tickDelta) {
+        //$$     int x = this.getX();
+        //$$     int entryWidth = this.getWidth();
+        //$$     int entryHeight = this.getHeight();
+        //$$     int mouseX = (int) EditingScoreListWidget.this.minecraft.mouseHandler.xpos();
+        //$$     int mouseY = (int) EditingScoreListWidget.this.minecraft.mouseHandler.ypos();
+        //$$     if (!this.nameField.visible) {
+        //$$         Component text = Component.nullToEmpty(this.name);
+        //$$         context.drawString(EditingScoreListWidget.this.minecraft.font, text, x + 20 + 5, y + entryHeight / 2 - EditingScoreListWidget.this.minecraft.font.lineHeight / 2, 0xFFFFFF, false);
+        //$$     }
+        //$$     this.nameField.setPosition(x + 20 + 5, y);
+        //$$     this.nameField.render(context, mouseX, mouseY, tickDelta);
+        //$$     this.editButton.setPosition(x, y);
+        //$$     this.editButton.render(context, mouseX, mouseY, tickDelta);
+        //$$     this.scoreField.setPosition(x + 130, y);
+        //$$     this.scoreField.render(context, mouseX, mouseY, tickDelta);
+        //$$     this.deleteButton.setPosition(x + 130 + 80 + 5, y);
+        //$$     this.deleteButton.render(context, mouseX, mouseY, tickDelta);
+        //$$ }
+        //#else
         @Override
         public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             if (!this.nameField.visible) {
@@ -216,5 +238,6 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
             this.deleteButton.setPosition(x + 130 + 80 + 5, y);
             this.deleteButton.render(context, mouseX, mouseY, tickDelta);
         }
+        //#endif
     }
 }

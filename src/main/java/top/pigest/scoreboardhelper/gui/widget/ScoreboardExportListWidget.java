@@ -164,6 +164,26 @@ public class ScoreboardExportListWidget extends ContainerObjectSelectionList<Sco
             return ImmutableList.of(this.deleteButton, this.forwardButton, this.backwardButton);
         }
 
+        //#if MC >= 1.21.10
+        //$$ @Override
+        //$$ public void renderContent(GuiGraphics context, int index, int y, boolean hovered, float tickDelta) {
+        //$$     int x = this.getX();
+        //$$     int entryWidth = this.getWidth();
+        //$$     int entryHeight = this.getHeight();
+        //$$     int mouseX = (int) ScoreboardExportListWidget.this.minecraft.mouseHandler.xpos();
+        //$$     int mouseY = (int) ScoreboardExportListWidget.this.minecraft.mouseHandler.ypos();
+        //$$     context.drawString(ScoreboardExportListWidget.this.minecraft.font, this.displayName, x - 40, y + entryHeight / 2 - ScoreboardExportListWidget.this.minecraft.font.lineHeight / 2, 0xFFFFFF, false);
+        //$$     this.deleteButton.setX(x + 90);
+        //$$     this.deleteButton.setY(y);
+        //$$     this.deleteButton.render(context, mouseX, mouseY, tickDelta);
+        //$$     this.forwardButton.setX(x + 90 + 60 + 5);
+        //$$     this.forwardButton.setY(y);
+        //$$     this.forwardButton.render(context, mouseX, mouseY, tickDelta);
+        //$$     this.backwardButton.setX(x + 90 + 60 + 5 + 20 + 5);
+        //$$     this.backwardButton.setY(y);
+        //$$     this.backwardButton.render(context, mouseX, mouseY, tickDelta);
+        //$$ }
+        //#else
         @Override
         public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             context.drawString(ScoreboardExportListWidget.this.minecraft.font, this.displayName, x - 40, y + entryHeight / 2 - ScoreboardExportListWidget.this.minecraft.font.lineHeight / 2, 0xFFFFFF, false);
@@ -177,5 +197,6 @@ public class ScoreboardExportListWidget extends ContainerObjectSelectionList<Sco
             this.backwardButton.setY(y);
             this.backwardButton.render(context, mouseX, mouseY, tickDelta);
         }
+        //#endif
     }
 }

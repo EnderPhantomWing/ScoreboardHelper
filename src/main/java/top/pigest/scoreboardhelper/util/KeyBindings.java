@@ -31,41 +31,69 @@ import com.mojang.blaze3d.platform.InputConstants;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBindings {
+    //#if MC >= 1.21.10
+    //$$ private static final KeyMapping.Category CATEGORY = KeyMapping.Category.MISC;
+    //#endif
+
     public static final KeyMapping KEY_BINDING_PAGE_UP = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.scoreboard-helper.pageUp",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UP,
+            //#if MC >= 1.21.10
+            //$$ CATEGORY
+            //#else
             "category.scoreboard-helper"
+            //#endif
     ));
     public static final KeyMapping KEY_BINDING_PAGE_DOWN = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.scoreboard-helper.pageDown",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_DOWN,
+            //#if MC >= 1.21.10
+            //$$ CATEGORY
+            //#else
             "category.scoreboard-helper"
+            //#endif
     ));
     public static final KeyMapping KEY_BINDING_SWITCH_DISPLAY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.scoreboard-helper.switchDisplay",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
+            //#if MC >= 1.21.10
+            //$$ CATEGORY
+            //#else
             "category.scoreboard-helper"
+            //#endif
     ));
     public static final KeyMapping KEY_BINDING_OPEN_CONFIG = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.scoreboard-helper.openConfig",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
+            //#if MC >= 1.21.10
+            //$$ CATEGORY
+            //#else
             "category.scoreboard-helper"
+            //#endif
     ));
     public static final KeyMapping KEY_BINDING_EXPORT_SCOREBOARD = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.scoreboard-helper.exportScoreboard",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_BACKSLASH,
+            //#if MC >= 1.21.10
+            //$$ CATEGORY
+            //#else
             "category.scoreboard-helper"
+            //#endif
     ));
     public static final KeyMapping KEY_BINDING_EDIT_SCORE = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.scoreboard-helper.editScore",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_PERIOD,
+            //#if MC >= 1.21.10
+            //$$ CATEGORY
+            //#else
             "category.scoreboard-helper"
+            //#endif
     ));
 
     public static void init() {

@@ -72,7 +72,11 @@ public class ScoreEditingScreen extends Screen {
     @Override
     public void tick() {
         if (minecraft != null && minecraft.player != null) {
+            //#if MC >= 1.21.11
+            //$$ if (!minecraft.player.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER)) {
+            //#else
             if (!minecraft.player.hasPermissions(2)) {
+            //#endif
                 if (this.submitButton.active) {
                     this.submitButton.active = false;
                     this.submitButton.setTooltip(Tooltip.create(Component.translatable("hint.scoreboard-helper.edit_score.permission_denied")));
@@ -88,9 +92,15 @@ public class ScoreEditingScreen extends Screen {
 
     @Override
     protected void init() {
-        CycleButton<SortMethod> buttonWidget = CycleButton.<SortMethod>builder(value -> Component.translatable("options.scoreboard-helper.edit_score.sort_method." + value.toString()))
+        CycleButton<SortMethod> buttonWidget = CycleButton.<SortMethod>builder(value -> Component.translatable("options.scoreboard-helper.edit_score.sort_method." + value.toString())
+                //#if MC >= 1.21.11
+                //$$ , sortMethod
+                //#endif
+        )
                 .withValues(SortMethod.values())
+                //#if MC < 1.21.11
                 .withInitialValue(sortMethod)
+                //#endif
                 .create(width / 2 - 10 - 200, height - 60, 170, 20, Component.translatable(getTranslationKey("sort_method")), ((button, value) -> {
                     this.sortMethod = value;
                     this.reversedSortButton.active = this.sortMethod != SortMethod.NONE;
@@ -151,11 +161,7 @@ public class ScoreEditingScreen extends Screen {
                 minecraft.player.connection.sendCommand(m.getModificationCommand());
             }
             if (scoreModifications.isEmpty()) {
-                //#if MC >= 1.21.3
-                //$$ minecraft.gui.getChat().addMessage(Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#else
-                minecraft.player.sendSystemMessage(Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                //#endif
+                ScoreboardHelperUtils.sendClientMessage(minecraft, Component.translatable("hint.scoreboard-helper.edit_score.fail.no_changes").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             }
             onClose();
         }

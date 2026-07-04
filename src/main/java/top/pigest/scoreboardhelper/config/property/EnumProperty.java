@@ -68,7 +68,14 @@ public class EnumProperty<T extends Enum<T>> extends BaseProperty<T> {
         Component tooltip = Component.translatable(Property.getTranslationKey(this.getKey(), TranslationKeyType.TOOLTIP));
         T[] values = this.getValue().getDeclaringClass().getEnumConstants();
         CycleButton<T> positionCyclingButtonWidget = CycleButton.<T>builder(value -> Component.translatable(Property.getTranslationKey(this.getKey(),
-                        TranslationKeyType.NORMAL) + ".value." + value.toString())).withValues(values).withInitialValue(this.getValue())
+                        TranslationKeyType.NORMAL) + ".value." + value.toString())
+                //#if MC >= 1.21.11
+                //$$ , this.getValue()
+                //#endif
+        ).withValues(values)
+                //#if MC < 1.21.11
+                .withInitialValue(this.getValue())
+                //#endif
                 .create(x, y, width, 20, text, (button, value) -> this.setValue(value));
         positionCyclingButtonWidget.setTooltip(Tooltip.create(tooltip));
         return positionCyclingButtonWidget;

@@ -15,5 +15,3 @@ Comparison of the first two characters when converting MC versions to SHA-256:
 | 1.21.8     | 2c                                       |
 | 1.21.10    | 6f                                       |
 | 1.21.11    | 3e                                       |
-| 26.1.2     | 4c                                       |
-| 26.2       | 9e                                       |
