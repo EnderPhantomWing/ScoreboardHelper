@@ -27,6 +27,7 @@ package top.pigest.scoreboardhelper.mixin;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
 import net.minecraft.world.scores.Scoreboard;
@@ -48,7 +49,7 @@ import top.pigest.scoreboardhelper.util.SidebarEntry;
 import java.util.Collection;
 import java.util.Comparator;
 
-@Mixin(Hud.class)
+@Mixin(value = Hud.class, priority = 10)
 public abstract class HudMixin {
 
     @Shadow public abstract Font getFont();

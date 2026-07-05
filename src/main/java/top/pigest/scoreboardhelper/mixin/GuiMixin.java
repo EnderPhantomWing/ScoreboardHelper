@@ -49,7 +49,7 @@ import top.pigest.scoreboardhelper.util.SidebarEntry;
 import java.util.Collection;
 import java.util.Comparator;
 
-@Mixin(Gui.class)
+@Mixin(value = Gui.class, priority = 10)
 public abstract class GuiMixin {
 
     @Shadow public abstract Font getFont();
