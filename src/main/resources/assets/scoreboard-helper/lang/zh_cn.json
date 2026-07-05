@@ -40,6 +40,8 @@
   "options.scoreboard-helper.export.finish": "导出已记录的记分板",
   "options.scoreboard-helper.export.record": "记录当前记分板",
   "options.scoreboard-helper.export.title": "将记分板导出至 CSV 文件",
+  "options.scoreboard-helper.category.appearance": "侧边栏外观",
+  "options.scoreboard-helper.category.general": "常规",
   "options.scoreboard-helper.title": "Scoreboard Helper 配置",
   "options.scoreboard-helper.max_show_count": "记分板侧边栏最大显示数",
   "options.scoreboard-helper.max_show_count.tooltip": "控制记分板侧边栏每次能够显示的玩家分数的条数。\n默认值：15",

@@ -49,15 +49,17 @@ public class ScoreboardHelperUtils {
     }
 
     public static void sendClientMessage(Minecraft client, Component message) {
-        //#if MC < 26.1
         if (client != null && client.player != null) {
+            //#if MC >= 26.2
+            //$$ client.gui.chatListener().handleSystemMessage(message, false);
+            //#else
             //#if MC >= 1.21.3
             //$$ client.gui.getChat().addMessage(message);
             //#else
             client.player.sendSystemMessage(message);
             //#endif
+            //#endif
         }
-        //#endif
     }
 
 }

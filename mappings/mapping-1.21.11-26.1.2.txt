@@ -18,3 +18,5 @@ net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper net.fabricmc.fabri
 net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper registerKeyBinding() registerKeyMapping()
 
 net.kyrptonaught.kyrptconfig.config.screen.NotSuckyButton renderContents() extractContents()
+
+net.minecraft.client.gui.components.ChatComponent addMessage() addClientSystemMessage()

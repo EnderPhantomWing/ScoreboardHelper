@@ -80,6 +80,10 @@ public class ScoreboardHelperConfigScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         this.propertyList.render(context, mouseX, mouseY, delta);
         int TITLE_Y = 8;
+        //#if MC >= 1.21.8
+        //$$ context.drawCenteredString(font, title.getVisualOrderText(), width / 2, TITLE_Y, 0xFFFFFF);
+        //#else
         context.drawCenteredString(font, title, width / 2, TITLE_Y, 0xFFFFFF);
+        //#endif
     }
 }

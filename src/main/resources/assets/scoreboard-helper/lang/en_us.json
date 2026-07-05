@@ -40,6 +40,8 @@
   "options.scoreboard-helper.export.finish": "Export Recorded Scoreboards",
   "options.scoreboard-helper.export.record": "Record Current Scoreboard",
   "options.scoreboard-helper.export.title": "Export Scoreboard to CSV File",
+  "options.scoreboard-helper.category.appearance": "Sidebar Appearance",
+  "options.scoreboard-helper.category.general": "General",
   "options.scoreboard-helper.title": "Scoreboard Helper Config",
   "options.scoreboard-helper.max_show_count": "Sidebar Max Display Count",
   "options.scoreboard-helper.max_show_count.tooltip": "Control the number of player scores that can be displayed on the scoreboard sidebar each time.\nDefault: 15",

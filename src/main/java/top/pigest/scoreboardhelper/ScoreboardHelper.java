@@ -38,9 +38,9 @@ import net.minecraft.world.scores.PlayerScoreEntry;
 import net.minecraft.world.scores.Scoreboard;
 import org.slf4j.Logger;
 import top.pigest.scoreboardhelper.command.SBHelperCommand;
+import top.pigest.scoreboardhelper.config.ClothConfigScreenFactory;
 import top.pigest.scoreboardhelper.config.ScoreboardHelperConfig;
 import top.pigest.scoreboardhelper.gui.screen.ScoreEditingScreen;
-import top.pigest.scoreboardhelper.gui.screen.ScoreboardHelperConfigScreen;
 import top.pigest.scoreboardhelper.util.Constants;
 import top.pigest.scoreboardhelper.gui.screen.ScoreboardExportScreen;
 import top.pigest.scoreboardhelper.util.KeyBindings;
@@ -77,12 +77,19 @@ public class ScoreboardHelper implements ClientModInitializer {
                 ScoreboardHelperConfig.INSTANCE.scoreboardShown.setValue(!ScoreboardHelperConfig.INSTANCE.scoreboardShown.getValue());
                 Constants.CD_SWITCH_DISPLAY = 5;
             }
-            //#if MC < 26.2
             if (KeyBindings.KEY_BINDING_OPEN_CONFIG.isDown()) {
-                client.setScreen(new ScoreboardHelperConfigScreen(client.screen, ScoreboardHelperConfig.INSTANCE));
+                //#if MC < 26.2
+                client.setScreen(ClothConfigScreenFactory.create(client.screen));
+                //#else
+                //$$ client.setScreenAndShow(ClothConfigScreenFactory.create(null));
+                //#endif
             }
             if(KeyBindings.KEY_BINDING_EXPORT_SCOREBOARD.isDown() && Constants.CD_EXPORT == 0) {
+                //#if MC < 26.2
                 ScoreboardExportScreen.INSTANCE.setParent(client.screen);
+                //#else
+                //$$ ScoreboardExportScreen.INSTANCE.setParent(null);
+                //#endif
                 client.setScreen(ScoreboardExportScreen.INSTANCE);
                 Constants.CD_EXPORT = 5;
             }
@@ -93,12 +100,15 @@ public class ScoreboardHelper implements ClientModInitializer {
                     if(objective == null) {
                         ScoreboardHelperUtils.sendClientMessage(client, Component.translatable("hint.scoreboard-helper.export.fail.inactive").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                     } else {
+                        //#if MC < 26.2
                         client.setScreen(new ScoreEditingScreen(client.screen, scoreboard, objective));
+                        //#else
+                        //$$ client.setScreenAndShow(new ScoreEditingScreen(null, scoreboard, objective));
+                        //#endif
                     }
                 }
                 Constants.CD_EDIT = 5;
             }
-            //#endif
         });
     }
 }

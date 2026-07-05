@@ -64,8 +64,16 @@ public class ScoreboardHelperInfoScreen extends Screen {
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        //#if MC >= 1.21.8
+        //$$ context.drawCenteredString(font, title.getVisualOrderText(), width / 2, height / 2 - 50, 0xFFFFFF);
+        //#else
         context.drawCenteredString(font, title, width / 2, height / 2 - 50, 0xFFFFFF);
+        //#endif
+        //#if MC >= 1.21.8
+        //$$ context.drawCenteredString(font, errorMessage.getVisualOrderText(), width / 2, height / 2 - 10, 0xFFFFFF);
+        //#else
         context.drawCenteredString(font, errorMessage, width / 2, height / 2 - 10, 0xFFFFFF);
+        //#endif
     }
 
     @Override

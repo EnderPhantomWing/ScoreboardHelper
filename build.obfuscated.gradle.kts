@@ -25,6 +25,7 @@ repositories {
     strictMaven("https://maven.fabricmc.net")
     strictMaven("https://maven.nucleoid.xyz/releases", "eu.pb4")
     strictMaven("https://maven.terraformersmc.com/releases", "com.terraformersmc")
+    strictMaven("https://maven.shedaniel.me/", "me.shedaniel.cloth")
     strictMaven("https://jitpack.io")
 }
 
@@ -36,6 +37,7 @@ dependencies {
     // Implementation Mods
     modImplementation("net.fabricmc.fabric-api:fabric-api:${prop("fabric_api_version")}")
     modImplementation("com.terraformersmc:modmenu:${prop("modmenu_version")}")
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${prop("cloth_config_version")}")
 
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 }

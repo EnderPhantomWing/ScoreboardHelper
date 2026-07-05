@@ -170,19 +170,13 @@ public class EditingScoreListWidget extends ContainerObjectSelectionList<Editing
             button.setMessage(this.nameField.visible ? Component.literal("✔") : Component.literal("✏"));
             if (!this.nameField.visible) {
                 if (this.nameField.getValue().isEmpty()) {
-                    //#if MC < 26.2
                     minecraft.setScreen(new ScoreboardHelperInfoScreen(EditingScoreListWidget.this.parent, ScoreboardHelperInfoScreen.InfoType.ERROR, Component.translatable("hint.scoreboard-helper.edit_score.fail.name_is_empty")));
-                    //#endif
                     this.removeIfNew();
                 } else if (this.nameField.getValue().contains(" ")) {
-                    //#if MC < 26.2
                     minecraft.setScreen(new ScoreboardHelperInfoScreen(EditingScoreListWidget.this.parent, ScoreboardHelperInfoScreen.InfoType.ERROR, Component.translatable("hint.scoreboard-helper.edit_score.fail.no_space_in_name")));
-                    //#endif
                     this.removeIfNew();
                 } else if (!widget.children().stream().filter(entry -> entry.name.equals(this.nameField.getValue()) && entry != this).toList().isEmpty()) {
-                    //#if MC < 26.2
                     minecraft.setScreen(new ScoreboardHelperInfoScreen(EditingScoreListWidget.this.parent, ScoreboardHelperInfoScreen.InfoType.ERROR, Component.translatable("hint.scoreboard-helper.edit_score.fail.name_exist")));
-                    //#endif
                     this.removeIfNew();
                 } else {
                     this.name = this.nameField.getValue();

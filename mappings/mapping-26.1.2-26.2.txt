@@ -3,3 +3,5 @@ net.minecraft.util.Tuple getA() getFirst()
 net.minecraft.util.Tuple getB() getSecond()
 com.mojang.datafixers.util.Pair getA() getFirst()
 com.mojang.datafixers.util.Pair getB() getSecond()
+
+net.minecraft.client.Minecraft setScreen() setScreenAndShow()
