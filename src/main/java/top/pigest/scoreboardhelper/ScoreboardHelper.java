@@ -93,6 +93,7 @@ public class ScoreboardHelper implements ClientModInitializer {
                 client.setScreen(ScoreboardExportScreen.INSTANCE);
                 Constants.CD_EXPORT = 5;
             }
+            //#if MC < 1.21.8
             if (KeyBindings.KEY_BINDING_EDIT_SCORE.isDown() && Constants.CD_EDIT == 0) {
                 if (client.level != null && client.player != null) {
                     Scoreboard scoreboard = client.level.getScoreboard();
@@ -109,6 +110,7 @@ public class ScoreboardHelper implements ClientModInitializer {
                 }
                 Constants.CD_EDIT = 5;
             }
+            //#endif
         });
     }
 }

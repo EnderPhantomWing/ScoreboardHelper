@@ -85,6 +85,7 @@ public class KeyBindings {
             "category.scoreboard-helper"
             //#endif
     ));
+    //#if MC < 1.21.8
     public static final KeyMapping KEY_BINDING_EDIT_SCORE = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.scoreboard-helper.editScore",
             InputConstants.Type.KEYSYM,
@@ -95,6 +96,7 @@ public class KeyBindings {
             "category.scoreboard-helper"
             //#endif
     ));
+    //#endif
 
     public static void init() {
 

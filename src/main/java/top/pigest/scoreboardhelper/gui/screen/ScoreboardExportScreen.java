@@ -69,20 +69,24 @@ public class ScoreboardExportScreen extends Screen {
         this.scoreboardExportListWidget = new ScoreboardExportListWidget(minecraft, this);
         addWidget(this.scoreboardExportListWidget);
 
+        //#if MC < 1.21.8
         addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("record")), button -> {
             boolean returnVal = record();
             if (!returnVal) {
                 onClose();
             }
         }).size(200, 20).pos(width / 2 - 10 - 200, height - 40 - 30).build());
+        //#endif
         addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("direct")), button -> {
             tryExport();
             onClose();
         }).size(200, 20).pos(width / 2 - 10 - 200, height - 40).build());
+        //#if MC < 1.21.8
         addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("finish")), button -> {
             exportAll();
             onClose();
         }).size(200, 20).pos(width / 2 + 10, height - 40 - 30).build());
+        //#endif
         addRenderableWidget(new Button.Builder(Component.translatable(getTranslationKey("close")), button -> onClose()).size(200, 20).pos(width / 2 + 10, height - 40).build());
     }
 
